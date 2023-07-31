@@ -20,8 +20,11 @@ function commit(dayMonthYear){
     //convert inputs to ints
     let dmyInts = dmyStrToInt(dayMonthYear);
 
-    //check if ints form a valid date
-    dmyInts = validDateValues(dmyInts);
+
+    //check if month and day are in valid range
+    dmyInts = dmyInRange(dmyInts);
+
+    console.log(dmyInts)
 
     //highlight error and do not continue if any of inputs are not valid  
     for (let i=0; i<dayMonthYear.length; i++){
@@ -35,8 +38,30 @@ function commit(dayMonthYear){
     }
     if (exit) return null;
 
-    //if we reach here dmyInts contains a valid date
+    //check if ints form a valid date
+    if(isInvalidDate(dmyInts)){
+        invalidInput(dayMonthYear[0], "Must be a valid date");
+        invalidInput(dayMonthYear[1], "");
+        invalidInput(dayMonthYear[2], "");
+        var exit = true;
+    }
+    if (exit) return null;
 
+
+
+    //if we reach here dmyInts contains a valid date
+    //creating Date object using constructor new Date(year, monthIndex, day) where 0 = Jan
+
+    const birthDate = new Date(dmyInts[2], dmyInts[1] - 1, dmyInts[0]);
+
+    //check if date is in the future
+    const now = new Date();
+
+    if(!(birthDate < now)){
+        invalidInput(dayMonthYear[0], "")
+        invalidInput(dayMonthYear[1], "")
+        invalidInput(dayMonthYear[2], "Must be in the past")
+    }
     console.log(dmyInts)
 }
 
@@ -73,16 +98,27 @@ function dmyStrToInt(dayMonthYear){
     return output;
 }
 
-function validDateValues(dmyInts){
+function dmyInRange(dmyInts){
     let output = [...dmyInts];
     
     const dayInt = dmyInts[0];
     const monthInt = dmyInts[1];
-    const yearInt = dmyInts[2];
+
+    if(dayInt < 1 || dayInt > 31){
+        output[0] = -1;
+    }
     
-    if(monthInt == 0 || monthInt > 12){
+    if(monthInt < 1 || monthInt > 12){
         output[1] = -1;
     }
+    return output;
+}
+
+function isInvalidDate(dmyInts){
+
+    const dayInt = dmyInts[0];
+    const monthInt = dmyInts[1];
+    const yearInt = dmyInts[2];
 
     let monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
 
@@ -90,10 +126,8 @@ function validDateValues(dmyInts){
     if(yearInt % 400 == 0 || (yearInt % 100 != 0 && yearInt % 4 == 0))
         monthLength[1] = 29;
 
-    if(dayInt < 1 || dayInt > monthLength[Math.abs(monthInt) - 1]){
-        output[0] = -1;
-    }
-    return output;
+    return(dayInt > monthLength[Math.abs(monthInt) - 1]);
+
 }
 
 
