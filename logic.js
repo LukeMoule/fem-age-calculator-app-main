@@ -1,3 +1,5 @@
+// Problem: JS relies on the structure of the HTML
+
 
 function init(){
     const dayMonthYear = document.querySelectorAll(".input-container div");
@@ -15,15 +17,25 @@ function commit(dayMonthYear){
     //reset all inputs to valid
     dayMonthYear.forEach(node => {validInput(node)});
 
-    let dmyInts = dmyStrToInt(dayMonthYear)
+    //convert inputs to ints
+    let dmyInts = dmyStrToInt(dayMonthYear);
 
-    //do not continue if any of inputs are not valid integers 
-    if (dmyInts.includes(-1)){
-        console.log(dmyInts, "Abort");
-        return null;
+    //check if ints form a valid date
+    dmyInts = validDateValues(dmyInts);
+
+    //highlight error and do not continue if any of inputs are not valid  
+    for (let i=0; i<dayMonthYear.length; i++){
+        if (dmyInts[i] === -1){
+            let node = dayMonthYear[i];
+            let title = node.querySelector("h2").innerHTML;
+            let message = `Must be a valid ${title.toLowerCase()}`;
+            invalidInput(node, message);
+            var exit = true;
+        }
     }
+    if (exit) return null;
 
-    //check individually if day month and year values are valid
+    //if we reach here dmyInts contains a valid date
 
     console.log(dmyInts)
 }
@@ -55,78 +67,35 @@ function dmyStrToInt(dayMonthYear){
     output = [];
 
     for (const node of dayMonthYear){
-        let title = node.querySelector("h2").innerHTML;
-        let inputString = node.querySelector("input").value;
-        if(isInt(inputString)){
-            output.push(parseInt(inputString));
-        } else {
-            let message = `Must be a valid ${title.toLowerCase()}`;
-            invalidInput(node, message);
-            output.push(-1);
-        }
+        const str = node.querySelector("input").value;
+        isInt(str) ? output.push(parseInt(str)) : output.push(-1)
     }
     return output;
 }
 
-
-function validateMonth(dmyInts){
-
-    let monthInt = dmyInts[1];
-
-    if(monthInt < 1 || monthInt > 12){
-        invalidInput("Must be a valid month", monthNode);
-    }
-
-}
-
-function validateYear(yearNode){
-
-    let yearString = yearNode.querySelector("input").value;
-
-    if(!isInt(yearString)){
-        throw new InputError("Must be a valid year", yearNode);
-    }
-
-    let yearInt = parseInt(yearString);
-
-    if(year <0 ){
-        throw new InputError("Must be a valid year", yearNode);
-    }
-}
-
-
-function validateDay(dayNode){
+function validDateValues(dmyInts){
+    let output = [...dmyInts];
     
-    let dayString = dayNode.querySelector("input").value;
-
-    if(!isInt(dayString)){
-        throw new InputError("Must be a valid day", dayNode);
-    }
-
-    let dayInt = parseInt(dayString);
-
-    if(dayInt < 1 || dayInt > 31){
-        throw new InputError("Must be a valid day", dayNode);
-    }
-
-}
-
-
-
-function isValidDate(dayInt, monthInt, yearInt){
+    const dayInt = dmyInts[0];
+    const monthInt = dmyInts[1];
+    const yearInt = dmyInts[2];
     
+    if(monthInt == 0 || monthInt > 12){
+        output[1] = -1;
+    }
+
     let monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
 
     // Adjust for leap years https://www.timeanddate.com/date/leapyear.html#rules
     if(yearInt % 400 == 0 || (yearInt % 100 != 0 && yearInt % 4 == 0))
         monthLength[1] = 29;
 
-    if(dayInt < 1 || dayInt > monthLength[monthInt - 1]){
-        return false;
+    if(dayInt < 1 || dayInt > monthLength[Math.abs(monthInt) - 1]){
+        output[0] = -1;
     }
-
-    return true;
+    return output;
 }
+
 
 function validInput(node){
     //reset h2 color
@@ -153,14 +122,6 @@ function invalidInput(node, message){
     errorMsg = node.querySelector(".error-msg");
     errorMsg.style.display = "block";
     errorMsg.innerHTML = message;
-
-}
-
-class InputError extends Error{
-    constructor(message, node){
-        super(message);
-        this.affectedNode = node;
-    }
 }
 
 //first check string is comprised of only digits
