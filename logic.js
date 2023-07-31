@@ -67,10 +67,10 @@ function validateMonth(monthNode){
 
 }
 
-function validateYear(){
-    validInput(year);
+function validateYear(yearNode){
+    validInput(yearNode);
 
-    let yearString = year.querySelector("input").value;
+    let yearString = yearNode.querySelector("input").value;
 
     if(!isInt(yearString)){
         throw new InputError("Must be a valid year", yearNode);
@@ -84,21 +84,19 @@ function validateYear(){
 }
 
 
-function validateDay(){
-    validInput(day);
+function validateDay(dayNode){
+    validInput(dayNode);
     
-    let dayString = day.querySelector("input").value;
+    let dayString = dayNode.querySelector("input").value;
 
     if(!isInt(dayString)){
-        invalidInput(day, "Must be a valid day");
-        return 0;
+        throw new InputError("Must be a valid day", dayNode);
     }
 
     let dayInt = parseInt(dayString);
 
     if(dayInt < 1 || dayInt > 31){
-        invalidInput(day, "Must be a valid day");
-        return 0;
+        throw new InputError("Must be a valid day", dayNode);
     }
 
 }
