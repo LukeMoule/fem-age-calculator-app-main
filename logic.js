@@ -2,6 +2,8 @@
 
 // TODO: refactor with a datetime library
 
+//bug: year 20 becomes 1920 
+
 
 function init(){
     const dayMonthYear = document.querySelectorAll(".input-container div");
@@ -63,7 +65,7 @@ function commit(dayMonthYear){
     //we now have a valid birthDate in the past, time to calculate.
     let age = calculateAge(birthDate);
 
-    //displayAge(age);
+    displayAge(age);
 
     console.log(age)
 
@@ -99,6 +101,16 @@ function calculateAge(birthDate){
     //return yearDiff + 'Y ' + monthDiff + 'M ' + dayDiff + 'D';
 
     return [yearDiff, monthDiff, dayDiff];
+
+}
+
+function displayAge(age){
+    const ageSpans = document.querySelectorAll(".output span");
+
+    for(let i=0; i< age.length; i++){
+        ageSpans[i].innerHTML = age[i];
+    }
+
 
 }
 
@@ -184,6 +196,10 @@ function validInput(node){
 }
 
 function invalidInput(node, message){
+    //reset age
+    const ageSpans = document.querySelectorAll(".output span");
+    ageSpans.forEach(s => {s.innerHTML = "--"});
+
     //make h2 red
     node.querySelector("h2").style.color = "var(--light-red)";
     
