@@ -1,5 +1,7 @@
 // Problem: JS relies on the structure of the HTML
 
+// TODO: refactor with a datetime library
+
 
 function init(){
     const dayMonthYear = document.querySelectorAll(".input-container div");
@@ -19,7 +21,6 @@ function commit(dayMonthYear){
 
     //convert inputs to ints
     let dmyInts = dmyStrToInt(dayMonthYear);
-
 
     //check if month and day are in valid range
     dmyInts = dmyInRange(dmyInts);
@@ -43,28 +44,63 @@ function commit(dayMonthYear){
         invalidInput(dayMonthYear[0], "Must be a valid date");
         invalidInput(dayMonthYear[1], "");
         invalidInput(dayMonthYear[2], "");
-        var exit = true;
+        return null;
     }
-    if (exit) return null;
-
-
 
     //if we reach here dmyInts contains a valid date
     //creating Date object using constructor new Date(year, monthIndex, day) where 0 = Jan
-
     const birthDate = new Date(dmyInts[2], dmyInts[1] - 1, dmyInts[0]);
 
     //check if date is in the future
     const now = new Date();
-
-    if(!(birthDate < now)){
+    if(birthDate > now){
         invalidInput(dayMonthYear[0], "")
         invalidInput(dayMonthYear[1], "")
         invalidInput(dayMonthYear[2], "Must be in the past")
+        return null;
     }
+
+    //we now have a valid birthDate in the past, time to calculate.
+    let age = calculateAge(birthDate);
+
+    //displayAge(age);
+
+    console.log(age)
+
     console.log(dmyInts)
 }
 
+//wait, how to calculate age in years, months and days?
+//code nabbed from https://stackoverflow.com/questions/17732897/difference-between-two-dates-in-years-months-days-in-javascript/49201872#49201872
+function calculateAge(birthDate){
+    const now = new Date();
+
+    const startYear = birthDate.getFullYear();
+    const february = (startYear % 4 === 0 && startYear % 100 !== 0) || startYear % 400 === 0 ? 29 : 28;
+    const daysInMonth = [31, february, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+    let yearDiff = now.getFullYear() - startYear;
+    let monthDiff = now.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0) {
+        yearDiff--;
+        monthDiff += 12;
+    }
+    let dayDiff = now.getDate() - birthDate.getDate();
+    if (dayDiff < 0) {
+        if (monthDiff > 0) {
+        monthDiff--;
+        } else {
+        yearDiff--;
+        monthDiff = 11;
+        }
+        dayDiff += daysInMonth[birthDate.getMonth()];
+    }
+
+    //return yearDiff + 'Y ' + monthDiff + 'M ' + dayDiff + 'D';
+
+    return [yearDiff, monthDiff, dayDiff];
+
+}
 
 //regex to validate whether string contains only digits
 function isInt(str){
@@ -98,6 +134,7 @@ function dmyStrToInt(dayMonthYear){
     return output;
 }
 
+//checks if day is in the range 1-31 and month in the range 1-12
 function dmyInRange(dmyInts){
     let output = [...dmyInts];
     
@@ -114,6 +151,8 @@ function dmyInRange(dmyInts){
     return output;
 }
 
+
+//returns true for invalid dates such as 31-02-2000
 function isInvalidDate(dmyInts){
 
     const dayInt = dmyInts[0];
