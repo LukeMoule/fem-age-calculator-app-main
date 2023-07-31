@@ -1,33 +1,31 @@
 
 function init(){
-    const dayNode = document.querySelector(".input-container .day");
-    const monthNode = document.querySelector(".input-container .month");
-    const yearNode = document.querySelector(".input-container .year");
+    const dayMonthYear = document.querySelectorAll(".input-container div");
     
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') {
-            commit(dayNode, monthNode, yearNode);
+            commit(dayMonthYear);
             console.log("enter");
         }
     });
 }
 
 
-function commit(dayNode, monthNode, yearNode){
+function commit(dayMonthYear){
     //reset all inputs to valid
-    validInput(dayNode);
-    validInput(monthNode);
-    validInput(yearNode);
+    dayMonthYear.forEach(node => {validInput(node)});
 
-    try {
-        let dayInt = validateDay(dayNode);
-        let monthInt = validateMonth(monthNode);
-        let yearInt = validateYear(yearNode);
-    } catch (error) {
-        invalidInput(error.affectedNode, error.message);
+    let dmyInts = dmyStrToInt(dayMonthYear)
+
+    //do not continue if any of inputs are not valid integers 
+    if (dmyInts.includes(-1)){
+        console.log(dmyInts, "Abort");
+        return null;
     }
-    
-    
+
+    //check individually if day month and year values are valid
+
+    console.log(dmyInts)
 }
 
 
@@ -49,26 +47,39 @@ console.log(invalidDate.toString()) //Thu Mar 02 2000 ???? */
 //Could use Moment.js (being phased out)
 
 
+//converts day month and year inputs to integer or -1 if not possible
+function dmyStrToInt(dayMonthYear){
 
-function validateMonth(monthNode){
-    validInput(monthNode);
+    //array containing input strings converted to int for day month year
+    // -1 if input string not an int
+    output = [];
 
-    let monthString = monthNode.querySelector("input").value;
-
-    if(!isInt(monthString)){
-        throw new InputError("Must be a valid month", monthNode);
+    for (const node of dayMonthYear){
+        let title = node.querySelector("h2").innerHTML;
+        let inputString = node.querySelector("input").value;
+        if(isInt(inputString)){
+            output.push(parseInt(inputString));
+        } else {
+            let message = `Must be a valid ${title.toLowerCase()}`;
+            invalidInput(node, message);
+            output.push(-1);
+        }
     }
+    return output;
+}
 
-    let monthInt = parseInt(monthString);
+
+function validateMonth(dmyInts){
+
+    let monthInt = dmyInts[1];
 
     if(monthInt < 1 || monthInt > 12){
-        throw new InputError("Must be a valid month", monthNode);
+        invalidInput("Must be a valid month", monthNode);
     }
 
 }
 
 function validateYear(yearNode){
-    validInput(yearNode);
 
     let yearString = yearNode.querySelector("input").value;
 
@@ -85,7 +96,6 @@ function validateYear(yearNode){
 
 
 function validateDay(dayNode){
-    validInput(dayNode);
     
     let dayString = dayNode.querySelector("input").value;
 
