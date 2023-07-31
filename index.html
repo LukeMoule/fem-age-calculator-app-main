@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
+  
+  <title>Frontend Mentor | Age calculator app</title>
+
+  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+  <link rel="stylesheet" type="text/css" href="styles.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,700;1,400;1,800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <article class="age-calculator">
+    <div class="input-container">
+      <div class="day">
+        <h2>DAY</h2>
+        <input type="text" inputmode="numeric" size="1" maxlength="2" placeholder="DD"></input>
+        <p class="error-msg">Must be a valid</p>
+      </div>
+      <div class="month">
+        <h2>MONTH</h2>
+        <input type="text" size="1" maxlength="2" placeholder="MM"></input>
+        <p class="error-msg"></p>
+      </div>
+      <div class="year">
+        <h2>YEAR</h2>
+        <input type="text" size="1" maxlength="4" placeholder="YYYY"></input>
+        <p class="error-msg"></p>
+      </div>
+    </div>
+    <div class="output">
+      <ul>
+        <li><span class="years">--</span> years</li>
+        <li><span class="months">--</span> months</li>
+        <li><span class="days">--</span> days</li>
+      </ul>
+    </div>
+  </article>
+  
+  <div class="attribution">
+    Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
+    Coded by <a href="#">Luke Moule</a>.
+  </div>
+</body>
+<script src="logic.js"></script>
+</html>

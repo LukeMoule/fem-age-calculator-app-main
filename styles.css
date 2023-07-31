@@ -1,0 +1,86 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.attribution { font-size: 11px; text-align: center;}
+.attribution a { color: hsl(228, 45%, 44%); }
+
+:root{
+    --purple: hsl(259, 100%, 65%);
+    --light-red: hsl(0, 100%, 67%);
+    --white: hsl(0, 0%, 100%);
+    --off-white: hsl(0, 0%, 94%);
+    --light-grey: hsl(0, 0%, 86%);
+    --smokey-grey: hsl(0, 1%, 44%);
+    --off-black: hsl(0, 0%, 8%);
+}
+
+body{
+    background-color: var(--off-white);
+    font-family: 'Poppins', sans-serif;
+    color: var(--off-black);
+}
+
+.age-calculator{
+    background-color: var(--white);
+    margin: 0 auto;
+    max-width: 400px;
+    padding: 3rem 2rem;
+    border-radius: 20px 20px 80px 20px;
+}
+
+.input-container{
+    display: flex;
+    justify-content: center;
+    gap : 1rem;
+
+    padding-bottom: 2rem;
+    border-bottom: 1.7px solid var(--light-grey);
+}
+
+.input-container h2{
+    padding: 0;
+    margin: 0;
+    color: var(--smokey-grey);
+    letter-spacing: 0.2em;
+    font-size: 10px;
+}
+
+.input-container input{
+    font-family:inherit;
+    font-size: 15px;
+    padding-left: 0.5rem;
+    margin: 0.3rem 0;
+    width: 100%;
+    height: 3rem;
+    border-radius: 7px;
+    border: 1.5px solid var(--light-grey);
+}
+
+.input-container div{
+    flex-basis: 33%;
+}
+
+.output{
+    padding-top: 2em;
+    font-style: italic;
+    font-weight: 800;
+}
+
+.output ul{
+    font-size: 32px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.input-container .error-msg{
+    margin: 0;
+    font-style: italic;
+    color: var(--light-red);
+    content: "Must be a valid";
+    font-size: 0.5rem;
+    display: none;
+}
